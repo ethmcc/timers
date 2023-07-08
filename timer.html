@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer App</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js" defer></script>
+</head>
+
+<body>
+  <div class="container mt-5" x-data="timer()">
+    <div class="row">
+      <div class="col-lg-6 mx-auto">
+        <div class="mb-3">
+          <label for="timerName" class="form-label">Timer Name</label>
+          <input type="text" class="form-control" id="timerName" x-model="timerName">
+        </div>
+        <div class="mb-3">
+          <label for="duration" class="form-label">Duration (in seconds)</label>
+          <input type="number" class="form-control" id="duration" x-model.number="duration">
+        </div>
+        <button class="btn btn-primary" @click="addTimer">Add Timer</button>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <template x-for="(timer, index) in timers" :key="index">
+        <div class="col-lg-4 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" x-text="timer.name"></h5>
+              <h6 class="card-subtitle mb-2 text-muted" x-text="'Time Remaining: ' + timer.time"></h6>
+              <div x-show="timer.time > 0" class="alert alert-info" role="alert">
+                Timer Running
+              </div>
+              <div x-show="timer.time <= 0" class="alert alert-success" role="alert">
+                Timer Completed
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <script>
+    function playBeep() {
+      const audio = new Audio('beep.mp3');
+      audio.play();
+    }
+
+    function createTimer(name, duration) {
+      return {
+        name,
+        time: duration,
+        interval: null
+      };
+    }
+
+    function startTimer(timer, index, timers) {
+      timer.interval = setInterval(() => {
+        timer.time--;
+
+        if (timer.time <= 0) {
+          clearInterval(timer.interval);
+          timers.splice(index, 1);
+          playBeep();
+        }
+      }, 1000);
+    }
+
+    function timer() {
+      return {
+        timers: [],
+        timerName: '',
+        duration: '',
+        addTimer: function() {
+          const timer = createTimer(this.timerName || "Default", this.duration || 30);
+          startTimer(timer, this.timers.length, this.timers);
+          this.timers.push(timer);
+
+          this.timerName = '';
+          this.duration = '';
+          console.log("timers:", this.timers, "added:", this.timerName, this.duration);
+        }
+      };
+    }
+  </script>
+</body>
+
+</html>
