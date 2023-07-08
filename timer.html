@@ -31,7 +31,9 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title" x-text="timer.name"></h5>
-              <h6 class="card-subtitle mb-2 text-muted" x-text="'Time Remaining: ' + timer.time"></h6>
+              <h6 class="card-subtitle mb-2 text-muted">
+                Time Remaining: <span x-text="timer.time"></span>
+              </h6>
               <div x-show="timer.time > 0" class="alert alert-info" role="alert">
                 Timer Running
               </div>
@@ -52,11 +54,13 @@
     }
 
     function createTimer(name, duration) {
-      return {
+      const timer = {
         name,
         time: duration,
         interval: null
       };
+
+      return Alpine.reactive(timer);
     }
 
     function startTimer(timer, index, timers) {
@@ -76,7 +80,7 @@
         timers: [],
         timerName: '',
         duration: '',
-        addTimer: function() {
+        addTimer() {
           const timer = createTimer(this.timerName || "Default", this.duration || 30);
           startTimer(timer, this.timers.length, this.timers);
           this.timers.push(timer);
