@@ -32,14 +32,15 @@
             <div class="card-body">
               <h5 class="card-title" x-text="timer.name"></h5>
               <h6 class="card-subtitle mb-2 text-muted">
-                Time Remaining: <span x-text="timer.time"></span>
+                Time Remaining: <span x-text="timer.remainingDuration"></span>
               </h6>
-              <div x-show="timer.time > 0" class="alert alert-info" role="alert">
+              <div x-show="timer.remainingDuration > 0" class="alert alert-info" role="alert">
                 Timer Running
               </div>
-              <div x-show="timer.time <= 0" class="alert alert-success" role="alert">
+              <div x-show="timer.remainingDuration <= 0" class="alert alert-success" role="alert">
                 Timer Completed
               </div>
+              <button class="btn btn-secondary" @click="resetTimer(index)">Refresh</button>
               <button class="btn-close" @click="removeTimer(index)"></button>
             </div>
           </div>
@@ -57,7 +58,8 @@
     function createTimer(name, duration) {
       const timer = {
         name,
-        time: duration,
+        duration,
+        remainingDuration: duration,
         interval: null
       };
 
@@ -66,9 +68,9 @@
 
     function startTimer(timer, index, timers) {
       timer.interval = setInterval(() => {
-        timer.time--;
+        timer.remainingDuration--;
 
-        if (timer.time <= 0) {
+        if (timer.remainingDuration <= 0) {
           clearInterval(timer.interval);
           playBeep();
         }
@@ -92,6 +94,11 @@
         removeTimer(index) {
           clearInterval(this.timers[index].interval);
           this.timers.splice(index, 1);
+        },
+        resetTimer(index) {
+          clearInterval(this.timers[index].interval);
+          this.timers[index].remainingDuration = this.timers[index].duration;
+          startTimer(this.timers[index], index, this.timers);
         }
       };
     }
