@@ -18,7 +18,7 @@
         <div class="mb-3">
           <label for="timerName" class="form-label">Timer Name</label>
           <div class="input-group">
-            <input type="text" class="form-control" id="timerName" x-model="timerName" @keydown.enter="addTimer"
+            <input type="text" class="form-control" x-model="timerName" @keydown.enter="addTimer"
               x-ref="timerNameInput">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
@@ -35,8 +35,7 @@
         </div>
         <div class="mb-3">
           <label for="duration" class="form-label">Duration (in seconds)</label>
-          <input type="number" class="form-control" id="duration" x-model.number="duration" @keydown.enter="addTimer"
-            x-ref="durationInput">
+          <input type="number" class="form-control" x-model.number="duration" @keydown.enter="addTimer">
         </div>
         <button class="btn btn-primary" @click="addTimer">Add Timer</button>
       </div>
