@@ -40,6 +40,7 @@
               <div x-show="timer.time <= 0" class="alert alert-success" role="alert">
                 Timer Completed
               </div>
+              <button class="btn-close" @click="removeTimer(index)"></button>
             </div>
           </div>
         </div>
@@ -87,6 +88,10 @@
           this.timerName = '';
           this.duration = '';
           console.log("timers:", this.timers, "added:", this.timerName, this.duration);
+        },
+        removeTimer(index) {
+          clearInterval(this.timers[index].interval);
+          this.timers.splice(index, 1);
         }
       };
     }
