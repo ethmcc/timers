@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <div class="container mt-5" x-data="timer()">
+  <div class="container mt-5" x-data="useTimers()">
     <div class="row">
       <div class="col-lg-6 mx-auto">
         <div class="mb-3">
@@ -35,8 +35,8 @@
         </div>
         <div class="mb-3">
           <label for="duration" class="form-label">Duration (in seconds)</label>
-          <input type="number" class="form-control" id="duration" x-model.number="duration"
-            @keydown.enter="addTimer" x-ref="durationInput">
+          <input type="number" class="form-control" id="duration" x-model.number="duration" @keydown.enter="addTimer"
+            x-ref="durationInput">
         </div>
         <button class="btn btn-primary" @click="addTimer">Add Timer</button>
       </div>
@@ -49,12 +49,12 @@
             <div class="card-body">
               <h5 class="card-title" x-text="timer.name"></h5>
               <h6 class="card-subtitle mb-2 text-muted">
-                Time Remaining: <span x-text="timer.remainingDuration"></span>
+                Time Remaining: <span x-text="timer.remaining"></span>
               </h6>
-              <div x-show="timer.remainingDuration > 0" class="alert alert-info" role="alert">
+              <div x-show="timer.remaining > 0" class="alert alert-info" role="alert">
                 Timer Running
               </div>
-              <div x-show="timer.remainingDuration <= 0" class="alert alert-success" role="alert">
+              <div x-show="timer.remaining <= 0" class="alert alert-success" role="alert">
                 Timer Completed
               </div>
               <button class="btn btn-outline-secondary" @click="resetTimer(index)">Reset</button>
@@ -76,58 +76,70 @@
       }
     }
 
-    function createTimer(name, duration) {
+    function createReactiveTimer(name, duration) {
       const timer = {
         name,
         duration,
-        remainingDuration: duration,
+        remaining: duration,
         interval: null
       };
 
       return Alpine.reactive(timer);
     }
 
-    function startTimer(timer, index, timers) {
+    function start(timer) {
       timer.interval = setInterval(() => {
-        timer.remainingDuration--;
+        timer.remaining--;
 
-        if (timer.remainingDuration <= 0) {
+        if (timer.remaining <= 0) {
           clearInterval(timer.interval);
           playBeep();
         }
       }, 1000);
     }
 
-    function timer() {
+    function reset(timer) {
+      clearInterval(timer.interval);
+      timer.remaining = timer.duration;
+      start(timer);
+    }
+
+    function useTimers() {
       return {
         timers: [],
         timerName: '',
         duration: '',
         selectedEmoji: '✅',
-        selectEmoji(emoji) {
-          this.selectedEmoji = emoji;
-        },
         addTimer() {
-          const timer = createTimer(this.timerName ? `${this.timerName} ${this.selectedEmoji}` : "Default", this.duration || 30);
-          startTimer(timer, this.timers.length, this.timers);
+          const timer = createReactiveTimer(
+            this.timerName.trim() ? `${this.timerName} ${this.selectedEmoji}` : "Default",
+            this.duration || 30
+          );
+          start(timer);
           this.timers.push(timer);
 
-          this.timerName = '';
-          this.duration = '';
-          this.selectedEmoji = '✅';
+          this.clearInputs();
           this.$nextTick(() => {
-            this.$refs.timerNameInput.focus();
+            this.focusInput();
           });
-          console.log("timers:", this.timers, "added:", this.timerName, this.duration);
         },
         removeTimer(index) {
           clearInterval(this.timers[index].interval);
           this.timers.splice(index, 1);
         },
         resetTimer(index) {
-          clearInterval(this.timers[index].interval);
-          this.timers[index].remainingDuration = this.timers[index].duration;
-          startTimer(this.timers[index], index, this.timers);
+          reset(this.timers[index]);
+        },
+        clearInputs() {
+          this.timerName = '';
+          this.duration = '';
+          this.selectedEmoji = '✅';
+        },
+        focusInput() {
+          this.$refs.timerNameInput.focus();
+        },
+        selectEmoji(emoji) {
+          this.selectedEmoji = emoji;
         }
       };
     }
