@@ -57,8 +57,8 @@
               <div x-show="timer.remainingDuration <= 0" class="alert alert-success" role="alert">
                 Timer Completed
               </div>
-              <button class="btn btn-secondary" @click="resetTimer(index)">Refresh</button>
-              <button class="btn-close" @click="removeTimer(index)"></button>
+              <button class="btn btn-outline-secondary" @click="resetTimer(index)">Reset</button>
+              <button class="btn btn-outline-danger" @click="removeTimer(index)">Close</button>
             </div>
           </div>
         </div>
