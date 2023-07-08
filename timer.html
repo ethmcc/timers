@@ -69,7 +69,6 @@
 
         if (timer.time <= 0) {
           clearInterval(timer.interval);
-          timers.splice(index, 1);
           playBeep();
         }
       }, 1000);
