@@ -116,7 +116,7 @@
             this.duration || 30
           );
           start(timer);
-          this.timers.push(timer);
+          this.timers.unshift(timer);
 
           this.clearInputs();
           this.$nextTick(() => {
