@@ -47,10 +47,10 @@
           <div class="card" :class="{'border-success' : timer.remaining <= 0}">
             <div class="card-body">
               <h5 class="card-title">
-                <span x-text="timer.name"></span> 
+                <span x-text="timer.name"></span>
               </h5>
               <h6 class="card-subtitle d-flex justify-content-between mb-2 text-muted">
-                <span>Time Remaining: <span x-text="renderSecs(timer.remaining)"></span></span> 
+                <span>Time Remaining: <span x-text="renderSecs(timer.remaining)"></span></span>
                 <span x-text="'/ ' + renderSecs(timer.duration)"></span>
               </h6>
               <div x-show="timer.remaining > 0" class="alert alert-info" role="alert">
@@ -106,12 +106,19 @@
 
       return totalSeconds;
     }
-    
+
     function renderSecs(seconds) {
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = seconds % 60;
 
       return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    function renderDefaultName(name, seconds) {
+      if (name.trim().length > 0) {
+        return name;
+      }
+      return `${Math.floor(seconds / 60)} minute timer`;
     }
 
     function createReactiveTimer(name, duration) {
@@ -149,9 +156,10 @@
         duration: '',
         selectedEmoji: '✅',
         addTimer() {
+          const seconds = parseTimeDuration(this.duration) || 30 * 60;
           const timer = createReactiveTimer(
-            this.timerName.trim() ? `${this.timerName} ${this.selectedEmoji}` : "Default",
-            parseTimeDuration(this.duration) || 30 * 60
+            renderDefaultName(this.timerName, seconds),
+            seconds
           );
           start(timer);
           this.timers.unshift(timer);
