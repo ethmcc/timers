@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <div class="container mt-5" x-data="useTimers()">
+  <div class="container mt-5" x-data="useTimers()" @click="initAudio">
     <div class="row">
       <div class="col-lg-6 mx-auto">
         <div class="mb-3">
@@ -66,8 +66,9 @@
   </div>
 
   <script>
+    var audio;
+
     function playBeep() {
-      const audio = new Audio('assets/beep.mp3');
       for (let i = 0; i < 3; i++) {
         setTimeout(() => {
           audio.play();
@@ -139,6 +140,11 @@
         },
         selectEmoji(emoji) {
           this.selectedEmoji = emoji;
+        },
+        initAudio() {
+          // audio initialized on user interaction for iOS
+          audio = new Audio();
+          audio.src = 'assets/beep.mp3';
         }
       };
     }
