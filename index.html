@@ -46,9 +46,11 @@
         <div class="col-lg-4 mb-4">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title" x-text="timer.name"></h5>
+              <h5 class="card-title d-flex justify-content-between">
+                <span x-text="timer.name"></span> <span x-text="renderSecs(timer.duration)"></span>
+              </h5>
               <h6 class="card-subtitle mb-2 text-muted">
-                Time Remaining: <span x-text="timer.remaining"></span> / <span x-text="timer.duration"></span>
+                Time Remaining: <span x-text="renderSecs(timer.remaining)"></span>
               </h6>
               <div x-show="timer.remaining > 0" class="alert alert-info" role="alert">
                 Timer Running
@@ -102,6 +104,13 @@
       }
 
       return totalSeconds;
+    }
+    
+    function renderSecs(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+
+      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
     function createReactiveTimer(name, duration) {
@@ -169,6 +178,7 @@
         selectEmoji(emoji) {
           this.selectedEmoji = emoji;
         },
+        renderSecs,
         initAudio() {
           // audio initialized on user interaction for iOS
           audio = new Audio();
