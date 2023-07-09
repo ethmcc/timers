@@ -44,13 +44,14 @@
     <div class="row mt-4">
       <template x-for="(timer, index) in timers" :key="index">
         <div class="col-lg-4 mb-4">
-          <div class="card">
+          <div class="card" :class="{'border-success' : timer.remaining <= 0}">
             <div class="card-body">
-              <h5 class="card-title d-flex justify-content-between">
-                <span x-text="timer.name"></span> <span x-text="renderSecs(timer.duration)"></span>
+              <h5 class="card-title">
+                <span x-text="timer.name"></span> 
               </h5>
-              <h6 class="card-subtitle mb-2 text-muted">
-                Time Remaining: <span x-text="renderSecs(timer.remaining)"></span>
+              <h6 class="card-subtitle d-flex justify-content-between mb-2 text-muted">
+                <span>Time Remaining: <span x-text="renderSecs(timer.remaining)"></span></span> 
+                <span x-text="'/ ' + renderSecs(timer.duration)"></span>
               </h6>
               <div x-show="timer.remaining > 0" class="alert alert-info" role="alert">
                 Timer Running
