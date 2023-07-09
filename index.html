@@ -48,7 +48,7 @@
             <div class="card-body">
               <h5 class="card-title" x-text="timer.name"></h5>
               <h6 class="card-subtitle mb-2 text-muted">
-                Time Remaining: <span x-text="timer.remaining"></span>
+                Time Remaining: <span x-text="timer.remaining"></span> / <span x-text="timer.duration"></span>
               </h6>
               <div x-show="timer.remaining > 0" class="alert alert-info" role="alert">
                 Timer Running
