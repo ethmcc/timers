@@ -160,7 +160,7 @@
         addTimer() {
           const seconds = parseTimeDuration(this.duration) || 30 * 60;
           const timer = createReactiveTimer(
-            renderDefaultName(this.timerName, seconds),
+            `${renderDefaultName(this.timerName, seconds)} ${this.selectedEmoji}`,
             seconds
           );
           start(timer);
