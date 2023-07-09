@@ -128,6 +128,7 @@
         id: timerId++,
         duration,
         remaining: duration,
+        end: null,
         interval: null
       };
 
@@ -135,8 +136,9 @@
     }
 
     function start(timer) {
+      timer.end = Date.now() + timer.remaining * 1000;
       timer.interval = setInterval(() => {
-        timer.remaining--;
+        timer.remaining = Math.round((timer.end - Date.now()) / 1000);
 
         if (timer.remaining <= 0) {
           clearInterval(timer.interval);
