@@ -34,8 +34,8 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="duration" class="form-label">Duration (in seconds)</label>
-          <input type="number" class="form-control" x-model.number="duration" @keydown.enter="addTimer">
+          <label for="duration" class="form-label">Duration (in minutes)</label>
+          <input class="form-control" x-model="duration" @keydown.enter="addTimer">
         </div>
         <button class="btn btn-primary" @click="addTimer">Add Timer</button>
       </div>
@@ -76,6 +76,34 @@
       }
     }
 
+    function parseTimeDuration(duration) {
+      const units = {
+        s: 1,
+        m: 60,
+        h: 3600,
+        d: 86400,
+      };
+
+      const regex = /(\d+)\s*([smhd])/g;
+      let totalSeconds = 0;
+      let match;
+
+      while ((match = regex.exec(duration))) {
+        const value = parseInt(match[1]);
+        const unit = match[2];
+
+        if (units.hasOwnProperty(unit)) {
+          totalSeconds += value * units[unit];
+        }
+      }
+
+      if (totalSeconds <= 0) {
+        return parseInt(duration) * 60;
+      }
+
+      return totalSeconds;
+    }
+
     function createReactiveTimer(name, duration) {
       const timer = {
         name,
@@ -113,7 +141,7 @@
         addTimer() {
           const timer = createReactiveTimer(
             this.timerName.trim() ? `${this.timerName} ${this.selectedEmoji}` : "Default",
-            this.duration || 30
+            parseTimeDuration(this.duration) || 30 * 60
           );
           start(timer);
           this.timers.unshift(timer);
