@@ -42,7 +42,7 @@
     </div>
 
     <div class="row mt-4">
-      <template x-for="(timer, index) in timers" :key="index">
+      <template x-for="(timer, index) in timers" :key="timer.id">
         <div class="col-lg-4 mb-4">
           <div class="card" :class="{'border-success' : timer.remaining <= 0}">
             <div class="card-body">
@@ -121,9 +121,11 @@
       return `${Math.floor(seconds / 60)} minute timer`;
     }
 
+    var timerId = 0;
     function createReactiveTimer(name, duration) {
       const timer = {
         name,
+        id: timerId++,
         duration,
         remaining: duration,
         interval: null
